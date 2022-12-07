@@ -17,3 +17,11 @@
     max-height: 400px;
     overflow: scroll;
 }
+
+.my-form-check {
+    max-width: 200px;
+}
+
+.btn-accordion {
+    margin-top: 10px;
+}
