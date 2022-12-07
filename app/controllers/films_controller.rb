@@ -1,41 +1,51 @@
+# frozen_string_literal: true
+
 require 'json'
 require 'open-uri'
 
 class FilmsController < ApplicationController
   def index
-     check_params
-     convert_params_string_into_array
-     find_all_filters
-     if @filters_years.empty? && @filters_countries.empty? && @filters_genres.empty?
-      find_films_when_no_filters
-     else 
-        @films_before_order = []
-     end
+    check_params
+    convert_params_string_into_array
+    find_all_filters
+    create_film_before_order
+    find_film_with_filter
+    convert_array_into_relation
 
-     find_film_by_genres unless @filters_genres.empty?
-     find_film_by_years unless @filters_years.empty?
-     find_film_by_countries unless @filters_countries.empty?
-     convert_array_into_relation
-     @films = @films_before_order.order(rating_kp: :desc).limit(50).offset(50 * (@current_page - 1))
-     respond_to do |format|
+    @films = @films_before_order.order(rating_kp: :desc).limit(50).offset(50 * (@current_page - 1))
+
+    respond_to do |format|
       format.html
       format.json do
         render json: set_json_result
-      endnil
-     end
+      end
+    end
   end
-end
 
   def film; end
+
+  def find_film_with_filter
+    find_film_by_genres unless @filters_genres.empty?
+    find_film_by_years unless @filters_years.empty?
+    find_film_by_countries unless @filters_countries.empty?
+  end
+
+  def create_film_before_order
+    if @filters_years.empty? && @filters_countries.empty? && @filters_genres.empty?
+      find_films_when_no_filters
+    else
+      @films_before_order = []
+    end
+  end
 
   def convert_array_into_relation
     @films_before_order = Film.where(id: @films_before_order.map(&:id))
   end
 
   def convert_params_string_into_array
-    @filters_genres = @filters_genres.split
-    @filters_countries = @filters_countries.split
-    @filters_years = @filters_years.split
+    @filters_genres = @filters_genres.split(',')
+    @filters_countries = @filters_countries.split(',')
+    @filters_years = @filters_years.split(',')
   end
 
   def check_params
@@ -57,21 +67,24 @@ end
 
   def find_film_by_genres
     @filters_genres.each do |genre|
-      films_filter_genres = Film.where("genres like ?", "%#{genre}%")
+      films_filter_genres = Film.where('genres like ?', "%#{genre}%")
       films_filter_genres.each { |film| @films_before_order.push(film) }
     end
   end
 
   def find_film_by_countries
     @filters_countries.each do |country|
-      films_filter_country = Film.where("country like ?", "#{country}")
-      films_filter_country.each {|film| @films_before_order.push(film)}
+      films_filter_country = Film.where('country like ?', country.to_s)
+      films_filter_country.each { |film| @films_before_order.push(film) }
     end
   end
 
   def find_film_by_years
-    @filters_years.map {|year| year.to_i}.each do |year|
-      films_filter_year = Film.where("year = ?", year)
+    p @filters_years
+    @filters_years = @filters_years.map(&:to_i)
+    p @filters_years
+    @filters_years.each do |year|
+      films_filter_year = Film.where('year = ?', year)
       films_filter_year.each { |film| @films_before_order.push(film) }
     end
   end
@@ -80,25 +93,24 @@ end
     result_hash = {}
     index = 0
     @films.each do |film|
-      result_hash[index] = {filmID: film.filmID,
-                            name: film.name,
-                            genres: ActiveSupport::JSON.decode(film.genres),
-                            year: film.year,
-                            age_restriction: film.age_restriction,
-                            country: ActiveSupport::JSON.decode(film.country),
-                            rating_imdb: film.rating_imdb,
-                            rating_imdb_count: film.rating_imdb_count,
-                            rating_kp: film.rating_kp,
-                            rating_kp_count: film.rating_kp_count,
-                            player: film.player,
-                            budget: film.budget,
-                            description: film.description,
-                            time: film.time,
-                            big_poster: film.big_poster,
-                            small_poster: film.small_poster,
-                            trailer: film.trailer 
-                          }
-        index += 1
+      result_hash[index] = { filmID: film.filmID,
+                             name: film.name,
+                             genres: ActiveSupport::JSON.decode(film.genres),
+                             year: film.year,
+                             age_restriction: film.age_restriction,
+                             country: ActiveSupport::JSON.decode(film.country),
+                             rating_imdb: film.rating_imdb,
+                             rating_imdb_count: film.rating_imdb_count,
+                             rating_kp: film.rating_kp,
+                             rating_kp_count: film.rating_kp_count,
+                             player: film.player,
+                             budget: film.budget,
+                             description: film.description,
+                             time: film.time,
+                             big_poster: film.big_poster,
+                             small_poster: film.small_poster,
+                             trailer: film.trailer }
+      index += 1
     end
     result_hash
   end
@@ -106,20 +118,20 @@ end
   def set_country_list
     @country_list = []
     Film.select(:country).distinct.each do |film|
-     ActiveSupport::JSON.decode(film.country).each do |country|
-       country = { 'name_ru' => 'Страна не указана' } if country.is_a? Array
-       @country_list.push(country['name_ru']) unless @country_list.include? country['name_ru']
-     end
+      ActiveSupport::JSON.decode(film.country).each do |country|
+        country = { 'name_ru' => 'Страна не указана' } if country.is_a? Array
+        @country_list.push(country['name_ru']) unless @country_list.include? country['name_ru']
+      end
     end
   end
 
   def set_genres_list
     @genres_list = []
     Film.select(:genres).distinct.each do |film|
-     ActiveSupport::JSON.decode(film.genres).each do |genre|
-       genre = { 'name_ru' => 'Жанры не указаны' } if genre.is_a? (Array)
-       @genres_list.push(genre['name_ru']) unless @genres_list.include? genre['name_ru']
-     end
+      ActiveSupport::JSON.decode(film.genres).each do |genre|
+        genre = { 'name_ru' => 'Жанры не указаны' } if genre.is_a?(Array)
+        @genres_list.push(genre['name_ru']) unless @genres_list.include? genre['name_ru']
+      end
     end
   end
 
@@ -127,7 +139,7 @@ end
     current_page = 1
     id = 1
     json_response = JSON.parse(URI.open("https://kinobd.ru/api/films?page=#{current_page}").read)
-    while !(json_response['next_page_url'].nil?)
+    until json_response['next_page_url'].nil?
       (0...json_response['data'].length).each do |index|
         set_variable_model(id, index)
         id += 1
@@ -144,7 +156,7 @@ end
     @genres = data['genres'].empty? ? ActiveSupport::JSON.encode(name_ru: ' ') : ActiveSupport::JSON.encode(data['genres'])
     @year = data['year'].nil? ? 0 : data['year'].to_i
     @age_restriction = data['age_restriction'].nil? ? 0 : data['age_restriction'].to_i
-    @country = data['countries'].empty? ? ActiveSupport::JSON.encode([{name_ru: ' '}]) : ActiveSupport::JSON.encode(data['countries'])
+    @country = data['countries'].empty? ? ActiveSupport::JSON.encode([{ name_ru: ' ' }]) : ActiveSupport::JSON.encode(data['countries'])
     @rating_imdb = data['rating_imdb'].nil? ? 0 : data['rating_imdb']
     @rating_imdb_count = data['rating_imdb_count'].nil? ? 0 : data['rating_imdb_count']
     @rating_kp = data['rating_kp'].nil? ? 0 : data['rating_kp']
@@ -179,5 +191,4 @@ end
       trailer: @trailer
     ).save
   end
-
 end

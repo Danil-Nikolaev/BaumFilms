@@ -85,7 +85,7 @@ $(document).ready(function() {
         console.log(filters_genres);
         console.log(filters_years);
         console.log(filters_countries);
-        window.location.href= (`/films/index?filters_genres=${filters_genres}&filters_countries=${filters_countries}&filters_years=${filters_years}&current_page=${current_page}`);
+        window.location.href= (`/films/index?filters_genres=${filters_genres}&filters_countries=${filters_countries}&filters_years=${filters_years}&current_page=1`);
 
     })
 })
