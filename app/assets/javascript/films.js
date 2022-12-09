@@ -58,6 +58,18 @@ function append_films_for_page() {
     });
 }
 
+function append_filters(array_list){
+    let array_filter = [];
+    for(let index = 0; index < array_list.length; index++){
+        if (array_list[index].checked) {
+            let str = array_list[index].nextElementSibling.outerText;
+            str = str.trim();
+            array_filter.push(str);
+        }
+    }
+    return array_filter
+}
+
 var current_page = find_current_page();
 
 var string_filter_genres = find_filter('genres=', 7);
@@ -75,36 +87,14 @@ $(document).ready(function() {
         }
     })
     $("#btn-acc").on("click", function() {
-        let filters_genres  = [];
-        let filters_years = [];
-        let filters_countries = [];
         let genres_list = $(".genres-class");
         let years_list = $(".years-class");
         let countries_list = $(".countries-class");
 
-        for(let index = 0; index < genres_list.length; index++){
-            if (genres_list[index].checked) {
-                let str = genres_list[index].nextElementSibling.outerText;
-                str = str.trim();
-                filters_genres.push(str);
-            }
-        }
+        let filters_genres = append_filters(genres_list);
+        let filters_years = append_filters(years_list);
+        let filters_countries = append_filters(countries_list);
 
-        for(let index = 0; index < years_list.length; index++){
-            if (years_list[index].checked) {
-                let str = years_list[index].nextElementSibling.outerText;
-                str = str.trim();
-                filters_years.push(str);
-            }
-        }
-
-        for(let index = 0; index < countries_list.length; index++){
-            if(countries_list[index].checked){
-                let str = countries_list[index].nextElementSibling.outerText;
-                str = str.trim();
-                filters_countries.push(str);
-            }
-        }
         window.location.href= (`/films/index?filters_genres=${filters_genres}&filters_countries=${filters_countries}&filters_years=${filters_years}&current_page=1`);
 
     })
