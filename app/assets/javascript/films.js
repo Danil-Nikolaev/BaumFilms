@@ -1,47 +1,25 @@
 var current_url = window.location.href;
 
-if (current_url.indexOf('page=') != -1){
-    var current_page = parseInt(current_url.slice(current_url.indexOf('page=') + 5));
-}else{
-    var current_page = 1;
-}
-
-if (current_url.indexOf('genres=') != -1){
-    let start_index_genres = current_url.indexOf('genres=') + 7;
-    let end_index_genres = start_index_genres;
-    while (current_url[end_index_genres] != '&') {
-        end_index_genres += 1;
+function find_current_page() {
+    if (current_url.indexOf('page=') != -1){
+        return parseInt(current_url.slice(current_url.indexOf('page=') + 5));
     }
-    var string_filter_genres = current_url.slice(start_index_genres, end_index_genres);
-} else {
-    var string_filter_genres = '';
+    
+    return 1;
 }
 
-if (current_url.indexOf('countries=') != -1){
-    let start_index_countries = current_url.indexOf('countries=') + 10;
-    let end_index_countries = start_index_countries;
-    while (current_url[end_index_countries] != '&') {
-        end_index_countries += 1;
+function find_filter(string, count_to_search){
+    if (current_url.indexOf(string) != -1){
+        let start_index_genres = current_url.indexOf(string) + count_to_search;
+        let end_index_genres = start_index_genres;
+        while (current_url[end_index_genres] != '&') {
+            end_index_genres += 1;
+        }
+        return current_url.slice(start_index_genres, end_index_genres);
     }
-    var string_filter_countries = current_url.slice(start_index_countries, end_index_countries);
-} else{
-    var string_filter_countries = '';
+    
+    return '';
 }
-
-if (current_url.indexOf('countries=') != -1){
-    let start_index_years = current_url.indexOf('years=') + 6;
-    let end_index_years = start_index_years;
-    while (current_url[end_index_years] != '&') {
-        end_index_years += 1;
-    }
-    var string_filter_years = current_url.slice(start_index_years, end_index_years);
-}else{
-    var string_filter_years = '';
-}
-
-
-var current_genres = parseInt(current_url.slice());
-console.log(current_page)
 
 function append_films_for_page() {
     current_page += 1
@@ -79,6 +57,16 @@ function append_films_for_page() {
         }
     });
 }
+
+var current_page = find_current_page();
+
+var string_filter_genres = find_filter('genres=', 7);
+
+var string_filter_countries = find_filter('countries=', 10);
+
+var string_filter_years = find_filter('years=', 6)
+
+
 
 $(document).ready(function() {
     $(window).scroll(function() {
