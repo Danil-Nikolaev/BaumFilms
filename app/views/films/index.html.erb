@@ -100,7 +100,7 @@
                         </div>
                     </div>
                 </div>
-                <a href="#" id="btn-acc" class="btn btn-primary btn-accordion">Go somewhere</a>
+                <a href="#" id="btn-acc" class="btn btn-primary btn-accordion">отфильтровать</a>
             </div>
         </div>
 
@@ -123,11 +123,15 @@
                             
                             <p class="card-text">жанры: 
                             <% ActiveSupport::JSON.decode(film.genres).each do |genre| %>
-                            <%= genre['name_ru'] %>,
+                            <% unless genre.is_a?(Array) %>
+                                <%= genre['name_ru'] %>,
+                            <% else %>
+                                жанров нет
+                            <% end %>
                             <% end %>
                             </p> 
                             
-                            <a href="#" class="btn btn-primary">Go somewhere</a>  
+                            <a href=<%="/films/film?id=#{film.id}"%> class="btn btn-primary">подробнее</a>  
                         </div>
                     </div>
                 <% end %>

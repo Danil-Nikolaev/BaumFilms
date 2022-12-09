@@ -22,7 +22,9 @@ class FilmsController < ApplicationController
     end
   end
 
-  def film; end
+  def film
+    @film = Film.find(params[:id].to_i)
+  end
 
   def find_film_with_filter
     find_film_by_genres unless @filters_genres.empty?
@@ -74,15 +76,13 @@ class FilmsController < ApplicationController
 
   def find_film_by_countries
     @filters_countries.each do |country|
-      films_filter_country = Film.where('country like ?', country.to_s)
+      films_filter_country = Film.where('country like ?', "%#{country}%")
       films_filter_country.each { |film| @films_before_order.push(film) }
     end
   end
 
   def find_film_by_years
-    p @filters_years
     @filters_years = @filters_years.map(&:to_i)
-    p @filters_years
     @filters_years.each do |year|
       films_filter_year = Film.where('year = ?', year)
       films_filter_year.each { |film| @films_before_order.push(film) }

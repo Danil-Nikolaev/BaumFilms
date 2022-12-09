@@ -1,2 +1,86 @@
-<h1>Films#film</h1>
-<p>Find me in app/views/films/film.html.erb</p>
+
+<!-- Панель навигации -->
+
+<nav class="navbar navbar-expand-lg navbar-light bg-light">
+  <div class="container-fluid">
+    <a class="navbar-brand" href="#">BaumFilms</a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+        <li class="nav-item">
+          <a class="nav-link active" aria-current="page" href="#">Главная</a>
+        </li>
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+            Жанры
+          </a>
+          <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+            <li><a class="dropdown-item" href="#">Action</a></li>
+            <li><a class="dropdown-item" href="#">Another action</a></li>
+            <li><hr class="dropdown-divider"></li>
+            <li><a class="dropdown-item" href="#">Something else here</a></li>
+          </ul>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="#">Мой кабинет</a>
+        </li>
+      </ul>
+      <form class="d-flex">
+        <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
+        <button class="btn btn-outline-success" type="submit">Search</button>
+      </form>
+    </div>
+  </div>
+</nav>
+
+<div class="container film">
+    <div class="row">
+        <div class="col-3">
+            <img src=<%= @film.big_poster %> class="card-img-top my-card-img-big" alt="...">
+        </div>
+        <div class="col-9 body-film">
+                <h5 class="film-title"> <%= @film.name %></h5>
+                
+                <p class="film-text">Страны: 
+                <% ActiveSupport::JSON.decode(@film.country).each do |one_country| %>
+                <%= one_country['name_ru'] %>,
+                <% end %>
+                </p>
+                <p class="film-text">Бюджет: <%= @film.budget %> </p>
+                
+                <p class="film-text">жанры: 
+                <% ActiveSupport::JSON.decode(@film.genres).each do |genre| %>
+                <% unless genre.is_a?(Array) %>
+                    <%= genre['name_ru'] %>,
+                <% else %>
+                    жанров нет
+                <% end %>
+                <% end %>
+                </p> 
+                <p class="film-text">
+                Рейтинг кинопоиск: 
+                <%= @film.rating_kp%>
+                </p>
+                <p class="film-text">
+                Количество просмотров на кинопоиск: 
+                <%= @film.rating_kp_count%>
+                </p>
+                <p class="film-text">
+                Рейтинг imdb: 
+                <%= @film.rating_imdb %>
+                </p>
+                <p class="film-text">
+                Количество просмотров на imdb: 
+                <%= @film.rating_imdb_count %>
+                </p>
+                <p>
+                    Возрастное ограничение
+                    <%= @film.age_restriction%>+
+                </p>
+                <p><%= @film.description %></p>
+                <%= link_to 'Назад', :back, :class => 'btn btn-primary' %>
+        </div>
+    </div>
+</div>
