@@ -7,8 +7,10 @@ class FilmsController < ApplicationController
   def index
     check_params
     convert_params_string_into_array
+
     find_all_filters
     create_film_before_order
+
     find_film_with_filter
     convert_array_into_relation
 
@@ -109,7 +111,8 @@ class FilmsController < ApplicationController
                              time: film.time,
                              big_poster: film.big_poster,
                              small_poster: film.small_poster,
-                             trailer: film.trailer }
+                             trailer: film.trailer,
+                            id: film.id }
       index += 1
     end
     result_hash

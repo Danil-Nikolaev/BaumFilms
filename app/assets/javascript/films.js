@@ -49,7 +49,7 @@ function append_films_for_page() {
             .append(`<p class="card-text">${countries_text()}</p>`)
             .append(`<p class="card-text">Бюджет: ${data[index]['budget']}</p>`)
             .append(`<p class="card-text">${genres_text()}</p>`)
-            .append('<a href="#" class="btn btn-primary">Go somewhere</a>');
+            .append(`<a href="/films/film?id=${data[index]['id']}" class="btn btn-primary">Подробнее</a>`);
             let card = $('<div class="card my-card" style="width: 18rem">')
             .append(`<img class="card-img-top my-card-img" src = ${data[index]['small_poster']}>`)
             .append(card_body);
