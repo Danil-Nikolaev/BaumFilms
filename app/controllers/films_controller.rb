@@ -14,7 +14,7 @@ class FilmsController < ApplicationController
     find_film_with_filter
     convert_array_into_relation
 
-    @films = @films_before_order.order(rating_kp: :desc).limit(50).offset(50 * (@current_page - 1))
+    @films = @films_before_order.order(rating_kp: :desc).limit(48).offset(48 * (@current_page - 1))
 
     respond_to do |format|
       format.html
