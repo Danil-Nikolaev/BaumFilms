@@ -28,6 +28,20 @@ class FilmsController < ApplicationController
     @film = Film.find(params[:id].to_i)
   end
 
+  def add_comment_to_films
+    film = Film.find(params[:id].to_i)
+    if film.comment.nil?
+      comment_hash = ActiveSupport::JSON.encode(result_comment: [{email: current_user.email, comment: params[:comment]}] )
+      film.update(comment: comment_hash)
+    else
+      comment_hash = ActiveSupport::JSON.decode(film.comment)
+      comment_hash['result_comment'].unshift({email: current_user.email, comment: params[:comment]})
+      comment_hash = ActiveSupport::JSON.encode(comment_hash)
+      film.update(comment: comment_hash)
+    end
+    redirect_to action: 'film', id: params[:id]
+  end
+
   def find_film_with_filter
     find_film_by_genres unless @filters_genres.empty?
     find_film_by_years unless @filters_years.empty?

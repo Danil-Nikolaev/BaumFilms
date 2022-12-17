@@ -28,8 +28,11 @@
         </li>
       </ul>
       <form class="d-flex">
-        <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
-        <button class="btn btn-outline-success" type="submit">Search</button>
+        <% if user_signed_in? %>
+            <%= link_to 'Выйти', destroy_user_session_path, :method => :delete, class: "nav-link active" %>
+        <% else %>
+            <%= link_to 'Войти', new_user_session_path, class: "nav-link active" %>
+        <% end %>
       </form>
     </div>
   </div>
@@ -80,7 +83,43 @@
                     <%= @film.age_restriction%>+
                 </p>
                 <p><%= @film.description %></p>
-                <%= link_to 'Назад', :back, :class => 'btn btn-primary' %>
+
+                <h2>Отзывы</h2>
+
+                <div class="rating-area">
+                  <input type="radio" id="star-5" name="rating" value="5">
+                  <label for="star-5" title="Оценка «5»"></label>	
+                  <input type="radio" id="star-4" name="rating" value="4">
+                  <label for="star-4" title="Оценка «4»"></label>    
+                  <input type="radio" id="star-3" name="rating" value="3">
+                  <label for="star-3" title="Оценка «3»"></label>  
+                  <input type="radio" id="star-2" name="rating" value="2">
+                  <label for="star-2" title="Оценка «2»"></label>    
+                  <input type="radio" id="star-1" name="rating" value="1">
+                  <label for="star-1" title="Оценка «1»"></label>
+              </div>
+
+                <% if  @film.comment.nil? %>
+                 <p>Отзывов нет</p>
+                    <% else %>
+                     <% ActiveSupport::JSON.decode(@film.comment).each do |comm_array| %>
+                        <% comm_array[1].each do |comm| %>
+                          <div class='comment'>
+                          <h5><%= comm['email'] %></h5>
+                          <p><%= comm['comment'] %> </p>
+                          </div>
+                        <% end %>
+                      <% end %>
+                <% end %>
+
+                <%= form_tag("http://localhost:3000/films/film?id=#{@film.id}", :method => "post") do %>
+                  <div class="mb-3">
+                    <label for="exampleFormControlTextarea1" class="form-label">Оставить отзыв</label>
+                    <%= text_area_tag(:comment, nil, rows: 3, class: "form-control") %>
+                    <button type="submit" class="btn btn-primary back-btn">Отправить</button>
+                  </div>
+                <% end %>
+                <%= link_to 'Назад', :back, :class => 'btn btn-primary back-btn' %>
         </div>
     </div>
 </div>
