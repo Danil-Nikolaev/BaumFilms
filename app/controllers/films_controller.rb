@@ -60,10 +60,17 @@ class FilmsController < ApplicationController
     film.update(baum_rating: rating_hash)
   end
 
-  def find_film_with_filter
-    find_film_by_genres unless @filters_genres.empty?
-    find_film_by_years unless @filters_years.empty?
-    find_film_by_countries unless @filters_countries.empty?
+  def check_params
+    @current_page = params[:current_page].nil? ? 1 : params[:current_page].to_i
+    @filters_genres = params[:filters_genres].nil? ? '' : params[:filters_genres]
+    @filters_countries = params[:filters_countries].nil? ? '' : params[:filters_countries]
+    @filters_years = params[:filters_years].nil? ? '' : params[:filters_years]
+  end
+
+  def convert_params_string_into_array
+    @filters_genres = @filters_genres.split(',')
+    @filters_countries = @filters_countries.split(',')
+    @filters_years = @filters_years.split(',')
   end
 
   def create_film_before_order
@@ -74,21 +81,36 @@ class FilmsController < ApplicationController
     end
   end
 
+  def find_film_with_filter
+    find_film_by_genres unless @filters_genres.empty?
+    find_film_by_years unless @filters_years.empty?
+    find_film_by_countries unless @filters_countries.empty?
+  end
+
+  def find_film_by_genres
+    @filters_genres.each do |genre|
+      films_filter_genres = Film.where('genres like ?', "%#{genre}%")
+      films_filter_genres.each { |film| @films_before_order.push(film) }
+    end
+  end
+
+  def find_film_by_countries
+    @filters_countries.each do |country|
+      films_filter_country = Film.where('country like ?', "%#{country}%")
+      films_filter_country.each { |film| @films_before_order.push(film) }
+    end
+  end
+
+  def find_film_by_years
+    @filters_years = @filters_years.map(&:to_i)
+    @filters_years.each do |year|
+      films_filter_year = Film.where('year = ?', year)
+      films_filter_year.each { |film| @films_before_order.push(film) }
+    end
+  end
+
   def convert_array_into_relation
     @films_before_order = Film.where(id: @films_before_order.map(&:id))
-  end
-
-  def convert_params_string_into_array
-    @filters_genres = @filters_genres.split(',')
-    @filters_countries = @filters_countries.split(',')
-    @filters_years = @filters_years.split(',')
-  end
-
-  def check_params
-    @current_page = params[:current_page].nil? ? 1 : params[:current_page].to_i
-    @filters_genres = params[:filters_genres].nil? ? '' : params[:filters_genres]
-    @filters_countries = params[:filters_countries].nil? ? '' : params[:filters_countries]
-    @filters_years = params[:filters_years].nil? ? '' : params[:filters_years]
   end
 
   def find_films_when_no_filters
@@ -129,28 +151,6 @@ class FilmsController < ApplicationController
           Genre.create(genre: genre['name_ru'])
         end
       end
-    end
-  end
-
-  def find_film_by_genres
-    @filters_genres.each do |genre|
-      films_filter_genres = Film.where('genres like ?', "%#{genre}%")
-      films_filter_genres.each { |film| @films_before_order.push(film) }
-    end
-  end
-
-  def find_film_by_countries
-    @filters_countries.each do |country|
-      films_filter_country = Film.where('country like ?', "%#{country}%")
-      films_filter_country.each { |film| @films_before_order.push(film) }
-    end
-  end
-
-  def find_film_by_years
-    @filters_years = @filters_years.map(&:to_i)
-    @filters_years.each do |year|
-      films_filter_year = Film.where('year = ?', year)
-      films_filter_year.each { |film| @films_before_order.push(film) }
     end
   end
 
