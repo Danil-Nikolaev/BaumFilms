@@ -41,11 +41,11 @@
                     </h2>
                     <div id="panelsStayOpen-collapseOne" class="accordion-collapse collapse show" aria-labelledby="panelsStayOpen-headingOne" data-bs-parent="#accordionPanelsStayOpenExample">
                         <div class="accordion-body my-accordion-body">
-                            <% @genres_list.each do | genre | %>
+                            <% Genre.all.each do | genre | %>
                                 <div class="form-check">
                                     <input class="form-check-input genres-class" type="checkbox" value="" id="flexCheckDefault">
                                     <label class="form-check-label" for="flexCheckDefault">
-                                        <%=  genre %>
+                                        <%=  genre.genre %>
                                     </label>
                                 </div>
                             <% end %>
@@ -61,11 +61,11 @@
                     </h2>
                     <div id="panelsStayOpen-collapseTwo" class="accordion-collapse collapse" aria-labelledby="panelsStayOpen-headingTwo" data-bs-parent="#accordionPanelsStayOpenExample">
                         <div class="accordion-body my-accordion-body">
-                            <% @year_list.each do | film | %>
+                            <% Year.all.each do | year | %>
                                 <div class="form-check">
                                     <input class="form-check-input years-class" type="checkbox" value="" id="flexCheckDefault">
                                     <label class="form-check-label" for="flexCheckDefault">
-                                        <%= film.year %>
+                                        <%= year.year %>
                                     </label>
                                 </div>
                             <% end %>
@@ -82,11 +82,11 @@
                     </h2>
                     <div id="panelsStayOpen-collapseThree" class="accordion-collapse collapse" aria-labelledby="panelsStayOpen-headingThree" data-bs-parent="#accordionPanelsStayOpenExample">
                         <div class="accordion-body my-accordion-body">
-                            <% @country_list.each do |country|%>
+                            <% Couynty.all.each do |country|%>
                             <div class="form-check my-form-check">
                                 <input class="form-check-input countries-class" type="checkbox" value="" id="flexCheckDefault">
                                 <label class="form-check-label" for="flexCheckDefault">
-                                    <%= country %>
+                                    <%= country.country %>
                                 </label>
                             </div>
                             <% end %>

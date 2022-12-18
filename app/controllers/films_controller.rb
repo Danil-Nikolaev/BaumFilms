@@ -8,7 +8,6 @@ class FilmsController < ApplicationController
     check_params
     convert_params_string_into_array
 
-    find_all_filters
     create_film_before_order
 
     find_film_with_filter
@@ -96,10 +95,41 @@ class FilmsController < ApplicationController
     @films_before_order = Film.all
   end
 
-  def find_all_filters
-    @year_list = Film.select(:year).distinct.order(year: :desc)
+  def generate_model_filters
+    set_years_list
     set_genres_list
     set_country_list
+  end
+
+  def set_years_list
+    @year_list = Film.select(:year).distinct.order(year: :desc)
+    @year_list.each { |year| Year.create(year: year.year) }
+  end
+
+  def set_country_list
+    @country_list = []
+    Film.select(:country).distinct.each do |film|
+      ActiveSupport::JSON.decode(film.country).each do |country|
+        country = { 'name_ru' => 'Страна не указана' } if country.is_a? Array
+        unless @country_list.include? country['name_ru']
+          @country_list.push(country['name_ru']) 
+          Couynty.create(country: country['name_ru'])
+        end
+      end
+    end
+  end
+
+  def set_genres_list
+    @genres_list = []
+    Film.select(:genres).distinct.each do |film|
+      ActiveSupport::JSON.decode(film.genres).each do |genre|
+        genre = { 'name_ru' => 'Жанры не указаны' } if genre.is_a?(Array)
+        unless @genres_list.include? genre['name_ru'] 
+          @genres_list.push(genre['name_ru'])
+          Genre.create(genre: genre['name_ru'])
+        end
+      end
+    end
   end
 
   def find_film_by_genres
@@ -149,27 +179,6 @@ class FilmsController < ApplicationController
       index += 1
     end
     result_hash
-  end
-
-  def set_country_list
-    @country_list = []
-    Film.select(:country).distinct.each do |film|
-      ActiveSupport::JSON.decode(film.country).each do |country|
-        country = { 'name_ru' => 'Страна не указана' } if country.is_a? Array
-        @country_list.push(country['name_ru']) unless @country_list.include? country['name_ru']
-      end
-    end
-  end
-
-  def set_genres_list
-    @genres_list = []
-    Film.select(:genres).distinct.each do |film|
-      ActiveSupport::JSON.decode(film.genres).each do |genre|
-        genre = { 'name_ru' => 'Жанры не указаны' } if genre.is_a?(Array)
-        @genres_list.push(genre['name_ru']) unless @genres_list.include? genre['name_ru']
-        Genre.create(genre: genre['name_ru'])
-      end
-    end
   end
 
   def generate_db
