@@ -108,13 +108,14 @@
                         <% end %>
                       <% end %>
                 <% end %>
-
-                <%= form_tag("http://localhost:3000/films/film?id=#{@film.id}", :method => "post") do %>
-                  <div class="mb-3">
-                    <label for="exampleFormControlTextarea1" class="form-label">Оставить отзыв</label>
-                    <%= text_area_tag(:comment, nil, rows: 3, class: "form-control") %>
-                    <button type="submit" class="btn btn-primary back-btn">Отправить</button>
-                  </div>
+                <% if user_signed_in? %>
+                  <%= form_tag("http://localhost:3000/films/film?id=#{@film.id}", :method => "post") do %>
+                    <div class="mb-3">
+                      <label for="exampleFormControlTextarea1" class="form-label">Оставить отзыв</label>
+                      <%= text_area_tag(:comment, nil, rows: 3, class: "form-control") %>
+                      <button type="submit" class="btn btn-primary back-btn">Отправить</button>
+                    </div>
+                  <% end %>
                 <% end %>
                 <a href=<%= @prev_url%> class="btn btn-primary back-btn">Назад</a>
         </div>

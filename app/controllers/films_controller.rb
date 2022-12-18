@@ -3,17 +3,15 @@
 require 'json'
 require 'open-uri'
 
+# Class-controller
 class FilmsController < ApplicationController
+  before_action :check_params, only: :index
+  before_action :convert_params_string_into_array, only: :index
+
   def index
-    check_params
-    convert_params_string_into_array
-
     @films_before_order = Film.all
-
     find_film_with_filter
-
     @films = @films_before_order.order(rating_kp: :desc).limit(48).offset(48 * (@current_page - 1))
-
     respond_to do |format|
       format.html
       format.json do
@@ -24,7 +22,7 @@ class FilmsController < ApplicationController
 
   def film
     @film = Film.find(params[:id].to_i)
-    @prev_url = params[:url]
+    @prev_url = request.referrer
   end
 
   def add_comment_to_films
@@ -58,6 +56,8 @@ class FilmsController < ApplicationController
     end
     film.update(baum_rating: rating_hash)
   end
+
+  private
 
   def check_params
     @current_page = params[:current_page].nil? ? 1 : params[:current_page].to_i
@@ -143,7 +143,7 @@ class FilmsController < ApplicationController
       ActiveSupport::JSON.decode(film.country).each do |country|
         country = { 'name_ru' => 'Страна не указана' } if country.is_a? Array
         unless @country_list.include? country['name_ru']
-          @country_list.push(country['name_ru']) 
+          @country_list.push(country['name_ru'])
           Couynty.create(country: country['name_ru'])
         end
       end
@@ -155,7 +155,7 @@ class FilmsController < ApplicationController
     Film.select(:genres).distinct.each do |film|
       ActiveSupport::JSON.decode(film.genres).each do |genre|
         genre = { 'name_ru' => 'Жанры не указаны' } if genre.is_a?(Array)
-        unless @genres_list.include? genre['name_ru'] 
+        unless @genres_list.include? genre['name_ru']
           @genres_list.push(genre['name_ru'])
           Genre.create(genre: genre['name_ru'])
         end
