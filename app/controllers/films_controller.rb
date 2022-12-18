@@ -8,10 +8,9 @@ class FilmsController < ApplicationController
     check_params
     convert_params_string_into_array
 
-    create_film_before_order
+    @films_before_order = Film.all
 
     find_film_with_filter
-    convert_array_into_relation
 
     @films = @films_before_order.order(rating_kp: :desc).limit(48).offset(48 * (@current_page - 1))
 
@@ -73,14 +72,6 @@ class FilmsController < ApplicationController
     @filters_years = @filters_years.split(',')
   end
 
-  def create_film_before_order
-    if @filters_years.empty? && @filters_countries.empty? && @filters_genres.empty?
-      find_films_when_no_filters
-    else
-      @films_before_order = []
-    end
-  end
-
   def find_film_with_filter
     find_film_by_genres unless @filters_genres.empty?
     find_film_by_years unless @filters_years.empty?
@@ -89,33 +80,51 @@ class FilmsController < ApplicationController
 
   def find_film_by_genres
     @filters_genres.each do |genre|
-      films_filter_genres = Film.where('genres like ?', "%#{genre}%")
-      films_filter_genres.each { |film| @films_before_order.push(film) }
+      @films_before_order = @films_before_order.where('genres like ?', "%#{genre}%")
     end
   end
 
   def find_film_by_countries
     @filters_countries.each do |country|
-      films_filter_country = Film.where('country like ?', "%#{country}%")
-      films_filter_country.each { |film| @films_before_order.push(film) }
+      @films_before_order = @films_before_order.where('country like ?', "%#{country}%")
     end
   end
 
   def find_film_by_years
     @filters_years = @filters_years.map(&:to_i)
     @filters_years.each do |year|
-      films_filter_year = Film.where('year = ?', year)
-      films_filter_year.each { |film| @films_before_order.push(film) }
+      @films_before_order = @films_before_order.where('year = ?', year)
     end
   end
 
-  def convert_array_into_relation
-    @films_before_order = Film.where(id: @films_before_order.map(&:id))
+  def set_json_result
+    result_hash = {}
+    index = 0
+    @films.each do |film|
+      result_hash[index] = { filmID: film.filmID,
+                             name: film.name,
+                             genres: ActiveSupport::JSON.decode(film.genres),
+                             year: film.year,
+                             age_restriction: film.age_restriction,
+                             country: ActiveSupport::JSON.decode(film.country),
+                             rating_imdb: film.rating_imdb,
+                             rating_imdb_count: film.rating_imdb_count,
+                             rating_kp: film.rating_kp,
+                             rating_kp_count: film.rating_kp_count,
+                             player: film.player,
+                             budget: film.budget,
+                             description: film.description,
+                             time: film.time,
+                             big_poster: film.big_poster,
+                             small_poster: film.small_poster,
+                             trailer: film.trailer,
+                             id: film.id }
+      index += 1
+    end
+    result_hash
   end
 
-  def find_films_when_no_filters
-    @films_before_order = Film.all
-  end
+  # Все методы ниже нужны для заполнения БД
 
   def generate_model_filters
     set_years_list
@@ -152,33 +161,6 @@ class FilmsController < ApplicationController
         end
       end
     end
-  end
-
-  def set_json_result
-    result_hash = {}
-    index = 0
-    @films.each do |film|
-      result_hash[index] = { filmID: film.filmID,
-                             name: film.name,
-                             genres: ActiveSupport::JSON.decode(film.genres),
-                             year: film.year,
-                             age_restriction: film.age_restriction,
-                             country: ActiveSupport::JSON.decode(film.country),
-                             rating_imdb: film.rating_imdb,
-                             rating_imdb_count: film.rating_imdb_count,
-                             rating_kp: film.rating_kp,
-                             rating_kp_count: film.rating_kp_count,
-                             player: film.player,
-                             budget: film.budget,
-                             description: film.description,
-                             time: film.time,
-                             big_poster: film.big_poster,
-                             small_poster: film.small_poster,
-                             trailer: film.trailer,
-                             id: film.id }
-      index += 1
-    end
-    result_hash
   end
 
   def generate_db
