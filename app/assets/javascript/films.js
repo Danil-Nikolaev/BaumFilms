@@ -98,4 +98,8 @@ $(document).ready(function() {
         window.location.href= (`/films/index?filters_genres=${filters_genres}&filters_countries=${filters_countries}&filters_years=${filters_years}&current_page=1`);
 
     })
+    var form = $('#stars');
+    $('.star').on('change', function(){
+        form.submit();
+    });
 })

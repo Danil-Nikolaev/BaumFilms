@@ -63,6 +63,14 @@
                 <% end %>
                 </p> 
                 <p class="film-text">
+                Рейтинг Baum_films: 
+                <% unless @film.baum_rating.nil? %>
+                <%= ActiveSupport::JSON.decode(@film.baum_rating)['rating'] %>
+                <% else %>
+                К данному фильму еще нет отзывов
+                <% end %>
+                </p>
+                <p class="film-text">
                 Рейтинг кинопоиск: 
                 <%= @film.rating_kp%>
                 </p>
@@ -85,20 +93,20 @@
                 <p><%= @film.description %></p>
 
                 <h2>Отзывы</h2>
-
-                <div class="rating-area">
-                  <input type="radio" id="star-5" name="rating" value="5">
-                  <label for="star-5" title="Оценка «5»"></label>	
-                  <input type="radio" id="star-4" name="rating" value="4">
-                  <label for="star-4" title="Оценка «4»"></label>    
-                  <input type="radio" id="star-3" name="rating" value="3">
-                  <label for="star-3" title="Оценка «3»"></label>  
-                  <input type="radio" id="star-2" name="rating" value="2">
-                  <label for="star-2" title="Оценка «2»"></label>    
-                  <input type="radio" id="star-1" name="rating" value="1">
-                  <label for="star-1" title="Оценка «1»"></label>
-              </div>
-
+                <%= form_tag("http://localhost:3000/rating?id=#{@film.id}", :method => "post", id: "stars") do %>
+                  <div class="rating-area">
+                    <input class="star" type="radio" id="star-5" name="rating" value="5">
+                    <label for="star-5" title="Оценка «5»"></label>	
+                    <input class="star" type="radio" id="star-4" name="rating" value="4">
+                    <label for="star-4" title="Оценка «4»"></label>    
+                    <input class="star" type="radio" id="star-3" name="rating" value="3">
+                    <label for="star-3" title="Оценка «3»"></label>  
+                    <input class="star" type="radio" id="star-2" name="rating" value="2">
+                    <label for="star-2" title="Оценка «2»"></label>    
+                    <input class="star" type="radio" id="star-1" name="rating" value="1">
+                    <label for="star-1" title="Оценка «1»"></label>
+                </div>
+              <% end %>
                 <% if  @film.comment.nil? %>
                  <p>Отзывов нет</p>
                     <% else %>

@@ -42,6 +42,23 @@ class FilmsController < ApplicationController
     redirect_to action: 'film', id: params[:id]
   end
 
+  def add_rating
+    film = Film.find(params[:id].to_i)
+    if film.baum_rating.nil?
+      rating_hash = ActiveSupport::JSON.encode({rating: params[:rating].to_i, number_of_appraisers: 1})
+      film.update(baum_rating: rating_hash)
+    else
+      rating_hash = ActiveSupport::JSON.decode(film.baum_rating)
+      rating_hash['number_of_appraisers'] += 1
+      count_before = rating_hash['number_of_appraisers'] - 1
+      number = rating_hash['number_of_appraisers']
+      rating = rating_hash['rating']
+      rating_hash['rating'] = ((rating * count_before + params[:rating].to_f) / number).round(2)
+      rating_hash = ActiveSupport::JSON.encode(rating_hash)
+      film.update(baum_rating: rating_hash)
+    end
+  end
+
   def find_film_with_filter
     find_film_by_genres unless @filters_genres.empty?
     find_film_by_years unless @filters_years.empty?
