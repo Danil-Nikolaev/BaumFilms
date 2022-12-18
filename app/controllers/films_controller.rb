@@ -167,6 +167,7 @@ class FilmsController < ApplicationController
       ActiveSupport::JSON.decode(film.genres).each do |genre|
         genre = { 'name_ru' => 'Жанры не указаны' } if genre.is_a?(Array)
         @genres_list.push(genre['name_ru']) unless @genres_list.include? genre['name_ru']
+        Genre.create(genre: genre['name_ru'])
       end
     end
   end

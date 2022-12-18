@@ -10,7 +10,13 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2022_12_18_095606) do
+ActiveRecord::Schema[7.0].define(version: 2022_12_18_103359) do
+  create_table "couynties", force: :cascade do |t|
+    t.string "country"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
   create_table "films", force: :cascade do |t|
     t.integer "filmID"
     t.string "name"
@@ -51,6 +57,12 @@ ActiveRecord::Schema[7.0].define(version: 2022_12_18_095606) do
     t.datetime "updated_at", null: false
     t.index ["email"], name: "index_users_on_email", unique: true
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
+  end
+
+  create_table "years", force: :cascade do |t|
+    t.string "year"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
   end
 
 end

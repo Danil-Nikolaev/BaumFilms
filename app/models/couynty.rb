@@ -1,0 +1,2 @@
+class Couynty < ApplicationRecord
+end
