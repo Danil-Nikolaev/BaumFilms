@@ -26,27 +26,29 @@ class FilmsController < ApplicationController
 
   def film
     @film = Film.find(params[:id].to_i)
+    @prev_url = params[:url]
   end
 
   def add_comment_to_films
+    return if params[:comment].empty?
+
     film = Film.find(params[:id].to_i)
     if film.comment.nil?
-      comment_hash = ActiveSupport::JSON.encode(result_comment: [{email: current_user.email, comment: params[:comment]}] )
-      film.update(comment: comment_hash)
+      comment_hash = ActiveSupport::JSON.encode(result_comment: [{ email: current_user.email,
+                                                                   comment: params[:comment] }])
     else
       comment_hash = ActiveSupport::JSON.decode(film.comment)
-      comment_hash['result_comment'].unshift({email: current_user.email, comment: params[:comment]})
+      comment_hash['result_comment'].unshift({ email: current_user.email, comment: params[:comment] })
       comment_hash = ActiveSupport::JSON.encode(comment_hash)
-      film.update(comment: comment_hash)
     end
+    film.update(comment: comment_hash)
     redirect_to action: 'film', id: params[:id]
   end
 
   def add_rating
     film = Film.find(params[:id].to_i)
     if film.baum_rating.nil?
-      rating_hash = ActiveSupport::JSON.encode({rating: params[:rating].to_i, number_of_appraisers: 1})
-      film.update(baum_rating: rating_hash)
+      rating_hash = ActiveSupport::JSON.encode({ rating: params[:rating].to_i, number_of_appraisers: 1 })
     else
       rating_hash = ActiveSupport::JSON.decode(film.baum_rating)
       rating_hash['number_of_appraisers'] += 1
@@ -55,8 +57,8 @@ class FilmsController < ApplicationController
       rating = rating_hash['rating']
       rating_hash['rating'] = ((rating * count_before + params[:rating].to_f) / number).round(2)
       rating_hash = ActiveSupport::JSON.encode(rating_hash)
-      film.update(baum_rating: rating_hash)
     end
+    film.update(baum_rating: rating_hash)
   end
 
   def find_film_with_filter
@@ -143,7 +145,7 @@ class FilmsController < ApplicationController
                              big_poster: film.big_poster,
                              small_poster: film.small_poster,
                              trailer: film.trailer,
-                            id: film.id }
+                             id: film.id }
       index += 1
     end
     result_hash

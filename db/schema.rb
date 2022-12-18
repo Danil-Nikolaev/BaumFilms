@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2022_12_17_185325) do
+ActiveRecord::Schema[7.0].define(version: 2022_12_18_095606) do
   create_table "films", force: :cascade do |t|
     t.integer "filmID"
     t.string "name"
@@ -33,6 +33,12 @@ ActiveRecord::Schema[7.0].define(version: 2022_12_17_185325) do
     t.datetime "updated_at", null: false
     t.text "baum_rating"
     t.text "comment"
+  end
+
+  create_table "genres", force: :cascade do |t|
+    t.string "genre"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
   end
 
   create_table "users", force: :cascade do |t|
