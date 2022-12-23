@@ -82,6 +82,7 @@
                 <p><%= @film.description %></p>
 
                 <h2>Отзывы</h2>
+                <% if user_signed_in? %>
                 <%= form_tag("http://localhost:3000/rating?id=#{@film.id}", :method => "post", id: "stars") do %>
                   <div class="rating-area">
                     <input class="star" type="radio" id="star-5" name="rating" value="5">
@@ -96,6 +97,7 @@
                     <label for="star-1" title="Оценка «1»"></label>
                 </div>
               <% end %>
+              <%end%>
                 <% if  @film.comment.nil? %>
                  <p>Отзывов нет</p>
                     <% else %>
