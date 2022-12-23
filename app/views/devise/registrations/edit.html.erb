@@ -1,3 +1,28 @@
+<nav class="navbar navbar-expand-lg navbar-light bg-light">
+  <div class="container-fluid">
+    <a class="navbar-brand" href="#">BaumFilms</a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+        <li class="nav-item">
+          <a class="nav-link active" aria-current="page" href="http://localhost:3000/">Главная</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="http://localhost:3000/users/edit">Мой кабинет</a>
+        </li>
+      </ul>
+      <form class="d-flex">
+        <% if user_signed_in? %>
+            <%= link_to 'Выйти', destroy_user_session_path, :method => :delete, class: "nav-link active" %>
+        <% else %>
+            <%= link_to 'Войти', new_user_session_path, class: "nav-link active" %>
+        <% end %>
+      </form>
+    </div>
+  </div>
+</nav>
 <div class="container">
   <h2>Редактировать профиль</h2>
 
@@ -14,28 +39,28 @@
     <% end %>
 
     <div class="field">
-      <%= f.label :password, class: "form-label" %> <i>(leave blank if you don't want to change it)</i><br />
+      <%= f.label :пароль, class: "form-label" %><br />
       <%= f.password_field :password, autocomplete: "new-password", class: "form-control" %>
       <% if @minimum_password_length %>
         <br />
-        <em><%= @minimum_password_length %> characters minimum</em>
+        <em>минимум <%= @minimum_password_length %> символов</em>
       <% end %>
     </div>
 
     <div class="field">
-      <%= f.label :password_confirmation, class: "form-label" %><br />
+      <%= f.label :Повторите_пароль, class: "form-label" %><br />
       <%= f.password_field :password_confirmation, autocomplete: "new-password", class: "form-control" %>
     </div>
 
     <div class="field">
-      <%= f.label :current_password, class: "form-label" %> <i>(we need your current password to confirm your changes)</i><br />
+      <%= f.label :Текщий_пароль, class: "form-label" %> <br />
       <%= f.password_field :current_password, autocomplete: "current-password", class: "form-control" %>
     </div>
 
     <div class="actions">
-      <%= f.submit "Update", class: "btn btn-primary" %>
+      <%= f.submit "Изменить", class: "btn btn-primary back-btn" %>
     </div>
   <% end %>
 
-  <%= link_to "Назад", :back %>
+  <%= link_to "Назад", :back, {class: "btn btn-primary back-btn"} %>
 </div>

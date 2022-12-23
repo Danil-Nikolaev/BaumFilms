@@ -83,3 +83,7 @@
 .rate-area > label:active {
 	position: relative;
 }
+
+#footer {
+	height: 300px;
+}

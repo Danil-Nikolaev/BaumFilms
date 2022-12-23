@@ -1,3 +1,28 @@
+<nav class="navbar navbar-expand-lg navbar-light bg-light">
+  <div class="container-fluid">
+    <a class="navbar-brand" href="#">BaumFilms</a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+        <li class="nav-item">
+          <a class="nav-link active" aria-current="page" href="http://localhost:3000/">Главная</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="http://localhost:3000/users/edit">Мой кабинет</a>
+        </li>
+      </ul>
+      <form class="d-flex">
+        <% if user_signed_in? %>
+            <%= link_to 'Выйти', destroy_user_session_path, :method => :delete, class: "nav-link active" %>
+        <% else %>
+            <%= link_to 'Войти', new_user_session_path, class: "nav-link active" %>
+        <% end %>
+      </form>
+    </div>
+  </div>
+</nav>
 <div class="container">
   <h2>Войти</h2>
   <%= form_for(resource, as: resource_name, url: session_path(resource_name)) do |f| %>
@@ -19,7 +44,7 @@
     <% end %>
 
     <div class="actions">
-      <%= f.submit "Log in", class: "btn btn-primary" %>
+      <%= f.submit "Войти", class: "btn btn-primary back-btn" %>
     </div>
   <% end %>
 
