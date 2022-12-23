@@ -8,10 +8,12 @@ class FilmsController < ApplicationController
   before_action :check_params, only: :index
   before_action :convert_params_string_into_array, only: :index
 
+  # This is an action for the main page
   def index
     @films_before_order = Film.all
     find_film_with_filter
     @films = @films_before_order.order(rating_kp: :desc).limit(48).offset(48 * (@current_page - 1))
+
     respond_to do |format|
       format.html
       format.json do
@@ -20,11 +22,12 @@ class FilmsController < ApplicationController
     end
   end
 
+  # This is an action for the selected movie
   def film
     @film = Film.find(params[:id].to_i)
-    @prev_url = request.referrer
   end
 
+  # This is an action to add a comment for the selcted movie
   def add_comment_to_films
     return if params[:comment].empty?
 
@@ -38,9 +41,10 @@ class FilmsController < ApplicationController
       comment_hash = ActiveSupport::JSON.encode(comment_hash)
     end
     film.update(comment: comment_hash)
-    redirect_to action: 'film', id: params[:id]
+    redirect_to request.referrer
   end
 
+  # This is an action to add a baum_rating for the selected movie
   def add_rating
     film = Film.find(params[:id].to_i)
     if film.baum_rating.nil?
@@ -59,6 +63,7 @@ class FilmsController < ApplicationController
 
   private
 
+  # This method checks the input parameters
   def check_params
     @current_page = params[:current_page].nil? ? 1 : params[:current_page].to_i
     @filters_genres = params[:filters_genres].nil? ? '' : params[:filters_genres]
@@ -66,30 +71,35 @@ class FilmsController < ApplicationController
     @filters_years = params[:filters_years].nil? ? '' : params[:filters_years]
   end
 
+  # This method converts parameters from a string to an array of strings
   def convert_params_string_into_array
     @filters_genres = @filters_genres.split(',')
     @filters_countries = @filters_countries.split(',')
     @filters_years = @filters_years.split(',')
   end
 
+  # This method checks the filters and finds movies by these filters
   def find_film_with_filter
     find_film_by_genres unless @filters_genres.empty?
     find_film_by_years unless @filters_years.empty?
     find_film_by_countries unless @filters_countries.empty?
   end
 
+  # This method find movies by genres
   def find_film_by_genres
     @filters_genres.each do |genre|
       @films_before_order = @films_before_order.where('genres like ?', "%#{genre}%")
     end
   end
 
+  # This method find movies by countries
   def find_film_by_countries
     @filters_countries.each do |country|
       @films_before_order = @films_before_order.where('country like ?', "%#{country}%")
     end
   end
 
+  # This method find movies by years
   def find_film_by_years
     @filters_years = @filters_years.map(&:to_i)
     @filters_years.each do |year|
@@ -97,6 +107,7 @@ class FilmsController < ApplicationController
     end
   end
 
+  # This method generate json result
   def set_json_result
     result_hash = {}
     index = 0
@@ -124,7 +135,7 @@ class FilmsController < ApplicationController
     result_hash
   end
 
-  # Все методы ниже нужны для заполнения БД
+  # All the methods below are needed to fill in the database
 
   def generate_model_filters
     set_years_list

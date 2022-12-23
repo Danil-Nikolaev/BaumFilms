@@ -109,7 +109,7 @@
                       <% end %>
                 <% end %>
                 <% if user_signed_in? %>
-                  <%= form_tag("http://localhost:3000/films/film?id=#{@film.id}", :method => "post") do %>
+                  <%= form_tag("film?id=#{@film.id}", method: 'post') do %>
                     <div class="mb-3">
                       <label for="exampleFormControlTextarea1" class="form-label">Оставить отзыв</label>
                       <%= text_area_tag(:comment, nil, rows: 3, class: "form-control") %>
@@ -117,7 +117,9 @@
                     </div>
                   <% end %>
                 <% end %>
-                <a href=<%= @prev_url%> class="btn btn-primary back-btn">Назад</a>
+                <a href=<%="/?filters_genres=#{params[:filters_genres]}&filters_countries=#{params[:filters_countries]}&filters_years=#{params[:filters_years]}&current_page=#{params[:current_page]}"%>, class="btn btn-primary">
+                  Назад
+                </a>
         </div>
     </div>
 </div>

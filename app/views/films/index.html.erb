@@ -122,9 +122,11 @@
                                 жанров нет
                             <% end %>
                             <% end %>
-                            </p> 
-                            
-                            <a href=<%="/films/film?id=#{film.id}'"%> class="btn btn-primary">подробнее</a>  
+                            </p>
+                            <a href=<%="/films/film?id=#{film.id}&filters_genres=#{@filters_genres.join(',')}&filters_countries=#{@filters_countries.join(',')}&filters_years=#{@filters_years.join(',')}&current_page=#{@current_page}"%>, class="btn btn-primary">
+                            подробнее
+                            </a>
+                              
                         </div>
                     </div>
                 <% end %>

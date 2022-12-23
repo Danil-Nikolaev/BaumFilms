@@ -12,12 +12,14 @@ function find_filter(string, count_to_search){
     if (current_url.indexOf(string) != -1){
         let start_index_genres = current_url.indexOf(string) + count_to_search;
         let end_index_genres = start_index_genres;
-        while (current_url[end_index_genres] != '&') {
+        while (current_url[end_index_genres] != '&' || end_index_genres == current_url.length - 1) {
             end_index_genres += 1;
         }
         return current_url.slice(start_index_genres, end_index_genres);
     }
-    
+    if (string == 'page='){
+        return 1
+    }
     return '';
 }
 
