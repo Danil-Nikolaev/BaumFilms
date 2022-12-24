@@ -11,15 +11,25 @@ describe 'Testsignin' do
   end
   it 'testsignin' do
     @driver.get('http://localhost:3000/')
-    @driver.manage.resize_to(1846, 1016)
+    sleep 1
+    @driver.manage.window.resize_to(1846, 1016)
+    sleep 1
     @driver.find_element(:link_text, 'Войти').click
+    sleep 1
     @driver.find_element(:id, 'user_email').send_keys('danil_nikolaev_96@bk.ru')
+    sleep 1
     @driver.find_element(:id, 'user_password').click
+    sleep 1
     @driver.find_element(:id, 'user_password').send_keys('123456')
+    sleep 1
     @driver.find_element(:name, 'commit').click
+    sleep 1
     @driver.find_element(:css, '.card:nth-child(1) .card-title').click
+    sleep 1
     expect(@driver.find_element(:css, '.card:nth-child(1) .card-title').text).to eq('Зеленая миля')
+    sleep 1
     @driver.find_element(:link_text, 'Выйти').click
+    sleep 1
     @driver.close
   end
 end

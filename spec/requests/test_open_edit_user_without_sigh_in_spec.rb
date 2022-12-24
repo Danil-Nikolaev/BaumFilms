@@ -11,12 +11,19 @@ describe 'Testopenedituserwithoutsighin' do
   end
   it 'testopenedituserwithoutsighin' do
     @driver.get('http://localhost:3000/')
-    @driver.manage.resize_to(1846, 1016)
+    sleep 1
+    @driver.manage.window.resize_to(1846, 1016)
+    sleep 1
     @driver.find_element(:link_text, 'Мой кабинет').click
+    sleep 1
     expect(@driver.find_element(:css, 'h2').text).to eq('Войти')
+    sleep 1
     @driver.find_element(:link_text, 'Главная').click
+    sleep 1
     @driver.find_element(:css, '.card:nth-child(1) .card-title').click
+    sleep 1
     expect(@driver.find_element(:css, '.card:nth-child(1) .card-title').text).to eq('Зеленая миля')
+    sleep 1
     @driver.close
   end
 end

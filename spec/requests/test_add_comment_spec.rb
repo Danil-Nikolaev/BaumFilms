@@ -11,24 +11,43 @@ describe 'Testaddcomment' do
   end
   it 'testaddcomment' do
     @driver.get('http://localhost:3000/')
-    @driver.manage.resize_to(1846, 1016)
+    sleep 1
+    @driver.manage.window.resize_to(1846, 1016)
+    sleep 1
     @driver.find_element(:link_text, 'Войти').click
+    sleep 1
     @driver.find_element(:id, 'user_email').send_keys('danil_nikolaev_96@bk.ru')
+    sleep 1
     @driver.find_element(:id, 'user_password').click
+    sleep 1
     @driver.find_element(:id, 'user_password').send_keys('123456')
+    sleep 1
     @driver.find_element(:name, 'commit').click
+    sleep 1
     @driver.find_element(:css, '#panelsStayOpen-headingTwo > .accordion-button').click
+    sleep 1
     @driver.find_element(:css, '#panelsStayOpen-collapseTwo .form-check:nth-child(87) > #flexCheckDefault').click
+    sleep 1
     @driver.find_element(:id, 'btn-acc').click
+    sleep 1
     @driver.find_element(:link_text, 'подробнее').click
+    sleep 1
     @driver.find_element(:id, 'comment').click
+    sleep 1
     @driver.find_element(:id, 'comment').send_keys('test')
+    sleep 1
     @driver.find_element(:css, '.back-btn').click
+    sleep 1
     @driver.find_element(:css, '.comment > h5').click
+    sleep 1
     expect(@driver.find_element(:css, '.comment > h5').text).to eq('danil_nikolaev_96@bk.ru')
+    sleep 1
     @driver.find_element(:css, '.comment > p').click
+    sleep 1
     expect(@driver.find_element(:css, '.comment > p').text).to eq('test')
+    sleep 1
     @driver.find_element(:link_text, 'Выйти').click
+    sleep 1
     @driver.close
   end
 end

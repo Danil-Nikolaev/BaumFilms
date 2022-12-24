@@ -11,13 +11,21 @@ describe 'Testopenfilm' do
   end
   it 'testopenfilm' do
     @driver.get('http://localhost:3000/')
-    @driver.manage.resize_to(1846, 1016)
+    sleep 1
+    @driver.manage.window.resize_to(1846, 1016)
+    sleep 1
     @driver.find_element(:link_text, 'подробнее').click
+    sleep 1
     @driver.find_element(:css, '.film-title').click
+    sleep 1
     expect(@driver.find_element(:css, '.film-title').text).to eq('Зеленая миля')
+    sleep 1
     @driver.find_element(:link_text, 'Назад').click
+    sleep 1
     @driver.find_element(:css, '.card:nth-child(1) .card-title').click
+    sleep 1
     expect(@driver.find_element(:css, '.card:nth-child(1) .card-title').text).to eq('Зеленая миля')
+    sleep 1
     @driver.close
   end
 end

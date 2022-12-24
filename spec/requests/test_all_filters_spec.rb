@@ -11,18 +11,31 @@ describe 'Testallfilters' do
   end
   it 'testallfilters' do
     @driver.get('http://localhost:3000/')
-    @driver.manage.resize_to(908, 1016)
+    sleep 1
+    @driver.manage.window.resize_to(1846, 1016)
+    sleep 1
     @driver.find_element(:id, 'flexCheckDefault').click
+    sleep 1
     @driver.find_element(:css, '#panelsStayOpen-collapseOne .form-check:nth-child(3) > #flexCheckDefault').click
+    sleep 1
     @driver.find_element(:css, '#panelsStayOpen-headingTwo > .accordion-button').click
+    sleep 1
     @driver.find_element(:css, '#panelsStayOpen-collapseTwo .form-check:nth-child(13) > #flexCheckDefault').click
+    sleep 1
     @driver.find_element(:css, '#panelsStayOpen-headingThree > .accordion-button').click
+    sleep 1
     @driver.find_element(:css, '.my-form-check:nth-child(1) > #flexCheckDefault').click
+    sleep 1
     @driver.find_element(:id, 'btn-acc').click
+    sleep 1
     @driver.find_element(:css, '.card:nth-child(1) .card-text:nth-child(2)').click
+    sleep 1
     expect(@driver.find_element(:css, '.card:nth-child(1) .card-text:nth-child(2)').text).to eq('Страны: США,')
+    sleep 1
     @driver.find_element(:css, '.card:nth-child(1) .card-text:nth-child(4)').click
+    sleep 1
     expect(@driver.find_element(:css, '.card:nth-child(1) .card-text:nth-child(4)').text).to eq('жанры: фэнтези, мультфильм, короткометражка,')
+    sleep 1
     @driver.close
   end
 end

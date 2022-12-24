@@ -11,12 +11,19 @@ describe 'Testfiltersyears' do
   end
   it 'testfiltersyears' do
     @driver.get('http://localhost:3000/')
-    @driver.manage.resize_to(908, 1016)
+    sleep 1
+    @driver.manage.window.resize_to(1846, 1016)
+    sleep 1
     @driver.find_element(:css, '#panelsStayOpen-headingTwo > .accordion-button').click
+    sleep 1
     @driver.find_element(:css, '#panelsStayOpen-collapseTwo .form-check:nth-child(12) > #flexCheckDefault').click
+    sleep 1
     @driver.find_element(:id, 'btn-acc').click
+    sleep 1
     @driver.find_element(:css, '.card:nth-child(1) .card-title').click
+    sleep 1
     expect(@driver.find_element(:css, '.card:nth-child(1) .card-title').text).to eq('Hot Wheels. За гранью воображения')
+    sleep 1
     @driver.close
   end
 end
