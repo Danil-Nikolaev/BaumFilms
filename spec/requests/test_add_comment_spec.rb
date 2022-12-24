@@ -32,11 +32,9 @@ describe 'Testaddcomment' do
     sleep 1
     @driver.find_element(:link_text, 'подробнее').click
     sleep 1
-    @driver.find_element(:id, 'comment').click
-    sleep 1
     @driver.find_element(:id, 'comment').send_keys('test')
     sleep 1
-    @driver.find_element(:css, '.back-btn').click
+    @driver.find_element(:css, '#send-comment').click
     sleep 1
     @driver.find_element(:css, '.comment > h5').click
     sleep 1

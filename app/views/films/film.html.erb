@@ -10,17 +10,17 @@
     <div class="collapse navbar-collapse" id="navbarSupportedContent">
       <ul class="navbar-nav me-auto mb-2 mb-lg-0">
         <li class="nav-item">
-          <a class="nav-link active" aria-current="page" href="http://localhost:3000/">Главная</a>
+          <a class="nav-link active" aria-current="page" href="http://localhost:3000/"><%=t('main')%></a>
         </li>
         <li class="nav-item">
-          <a class="nav-link" href="http://localhost:3000/users/edit">Мой кабинет</a>
+          <a class="nav-link" href="http://localhost:3000/users/edit"><%=t('Мой кабинет')%></a>
         </li>
       </ul>
       <form class="d-flex">
         <% if user_signed_in? %>
-            <%= link_to 'Выйти', destroy_user_session_path, :method => :delete, class: "nav-link active" %>
+            <%= link_to t('exit'), destroy_user_session_path, :method => :delete, class: "nav-link active" %>
         <% else %>
-            <%= link_to 'Войти', new_user_session_path, class: "nav-link active" %>
+            <%= link_to t('Sign in'), new_user_session_path, class: "nav-link active" %>
         <% end %>
       </form>
     </div>
@@ -35,14 +35,14 @@
         <div class="col-9 body-film">
                 <h5 class="film-title"> <%= @film.name %></h5>
                 
-                <p class="film-text">Страны: 
+                <p class="film-text"><%=t('Страны:')%> 
                 <% ActiveSupport::JSON.decode(@film.country).each do |one_country| %>
                 <%= one_country['name_ru'] %>,
                 <% end %>
                 </p>
-                <p class="film-text">Бюджет: <%= @film.budget %> </p>
+                <p class="film-text"><%=t('Budget:')%> <%= @film.budget %> </p>
                 
-                <p class="film-text">жанры: 
+                <p class="film-text"><%=t('genres:')%> 
                 <% ActiveSupport::JSON.decode(@film.genres).each do |genre| %>
                 <% unless genre.is_a?(Array) %>
                     <%= genre['name_ru'] %>,
@@ -52,7 +52,7 @@
                 <% end %>
                 </p> 
                 <p class="film-text">
-                Рейтинг Baum_films: 
+                <%=t('rating')%> Baum_films: 
                 <% unless @film.baum_rating.nil? %>
                 <%= ActiveSupport::JSON.decode(@film.baum_rating)['rating'] %>
                 <% else %>
@@ -60,28 +60,28 @@
                 <% end %>
                 </p>
                 <p class="film-text">
-                Рейтинг кинопоиск: 
+                <%=t('rating')%> кинопоиск: 
                 <%= @film.rating_kp%>
                 </p>
                 <p class="film-text">
-                Количество просмотров на кинопоиск: 
+                <%=t('Number of views')%> на кинопоиск: 
                 <%= @film.rating_kp_count%>
                 </p>
                 <p class="film-text">
-                Рейтинг imdb: 
+                <%=t('rating')%> imdb: 
                 <%= @film.rating_imdb %>
                 </p>
                 <p class="film-text">
-                Количество просмотров на imdb: 
+                <%=t('Number of views')%> на imdb: 
                 <%= @film.rating_imdb_count %>
                 </p>
                 <p>
-                    Возрастное ограничение
+                    <%=t('Age limit')%>
                     <%= @film.age_restriction%>+
                 </p>
                 <p><%= @film.description %></p>
 
-                <h2>Отзывы</h2>
+                <h2><%=t('Comment')%></h2>
                 <% if user_signed_in? %>
                 <%= form_tag("http://localhost:3000/rating?id=#{@film.id}", :method => "post", id: "stars") do %>
                   <div class="rating-area">
@@ -99,7 +99,7 @@
               <% end %>
               <%end%>
                 <% if  @film.comment.nil? %>
-                 <p>Отзывов нет</p>
+                 <p><%=t('There are no comments')%></p>
                     <% else %>
                      <% ActiveSupport::JSON.decode(@film.comment).each do |comm_array| %>
                         <% comm_array[1].each do |comm| %>
@@ -113,14 +113,14 @@
                 <% if user_signed_in? %>
                   <%= form_tag("film?id=#{@film.id}", method: 'post') do %>
                     <div class="mb-3">
-                      <label for="exampleFormControlTextarea1" class="form-label">Оставить отзыв</label>
+                      <label for="exampleFormControlTextarea1" class="form-label"><%=t('Leave a comments')%></label>
                       <%= text_area_tag(:comment, nil, rows: 3, class: "form-control") %>
-                      <button type="submit" class="btn btn-primary back-btn">Отправить</button>
+                      <button type="submit" id="send-comment" class="btn btn-primary back-btn"><%=t('Send')%></button>
                     </div>
                   <% end %>
                 <% end %>
                 <a href=<%="/?filters_genres=#{params[:filters_genres]}&filters_countries=#{params[:filters_countries]}&filters_years=#{params[:filters_years]}&current_page=#{params[:current_page]}"%>, class="btn btn-primary">
-                  Назад
+                  <%=t('Back')%>
                 </a>
         </div>
     </div>
