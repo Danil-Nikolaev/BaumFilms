@@ -1,24 +1,11 @@
-# README
-
-This README would normally document whatever steps are necessary to get the
-application up and running.
-
-Things you may want to cover:
-
-* Ruby version
-
-* System dependencies
-
-* Configuration
-
-* Database creation
-
-* Database initialization
-
-* How to run the test suite
-
-* Services (job queues, cache servers, search engines, etc.)
-
-* Deployment instructions
-
-* ...
+# BaumFilms
+## Описание
+Это сайт-агрегатор фильмов, в нем реализована:
+1. Авторизация
+2. Сортировка по году
+3. Сортировка по жанру
+4. Сортировка по стране выпуска
+5. можно оставлять комментарии
+6. Можно оставлять оценку
+7. У каждого фильма есть своя отдельная страница
+8. Асинхронная обработка запросов
